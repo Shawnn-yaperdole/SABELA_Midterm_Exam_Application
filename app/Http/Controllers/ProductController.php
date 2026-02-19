@@ -6,10 +6,10 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    // Method to get all movie products
-    public function index()
+    
+    private function getProducts()
     {
-        $products = [
+        return [
             [
                 'id' => 1,
                 'title' => 'Orozco the Embalmer',
@@ -23,7 +23,7 @@ class ProductController extends Controller
             ],
             [
                 'id' => 2,
-                'title' => 'Ghost in the Shell/Kôkaku Kidôtai',
+                'title' => 'Ghost in the Shell',
                 'year' => 1995,
                 'director' => 'Mamoru Oshii',
                 'genre' => 'Thriller/Sci-Fi/Cyberpunk',
@@ -74,23 +74,26 @@ class ProductController extends Controller
                 'price' => 9.99,
                 'description' => 'Two detectives, a rookie and a veteran, hunt a serial killer who uses the seven deadly sins as his motives.',
                 'rating' => 8.6,
-                'cover_image' => asset('images/7.jfif')
+                'cover_image' => asset('images/seven.jfif') 
             ],
         ];
+    }
 
+    
+    public function index()
+    {
+        $products = $this->getProducts();
         return view('products.index', compact('products'));
     }
 
    
     public function show($id)
     {
-        $products = [
-        ];
-
+        $products = $this->getProducts();
         $product = collect($products)->firstWhere('id', $id);
 
         if (!$product) {
-            abort(404);
+            abort(404, 'Product not found');
         }
 
         return view('products.show', compact('product'));
